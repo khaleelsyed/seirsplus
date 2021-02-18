@@ -534,7 +534,11 @@ def generate_demographic_contact_network(N, demographic_data, layer_generator='F
         # distancing adjacency matrices where the isolation groups are isolated (no public edges),
         # and create graphs corresponding to the isolation intervention for each distancing level:
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        for graphName, graph in graphs.items():
+
+        # XXX: Used to prevent RuntimeError: dictionary changed size during iteration
+        graphs_copy = {k: v for k, v in graphs.items()}
+
+        for graphName, graph in graphs_copy.items():
             A_withIsolation = scipy.sparse.csr_matrix.multiply( networkx.adj_matrix(graph), A_isolation_mask )
             graphs[graphName+'_isolation'] = networkx.from_scipy_sparse_matrix(A_withIsolation)
 
